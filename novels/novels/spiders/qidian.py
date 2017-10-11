@@ -24,7 +24,7 @@ class QidianSpider(scrapy.Spider):
         """
         pages = response.css('div#page-container::attr(data-pagemax)').re(r'\d+')[0]
         for i in range(1, int(pages) + 1):
-            time.sleep(random.randint(1, 5))
+            time.sleep(random.randint(1, 3))
             url = self.start_urls[0] + "?page={i}".format(i=i)
             yield Request(url, callback=self.parse_pages)
 
