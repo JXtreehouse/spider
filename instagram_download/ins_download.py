@@ -71,7 +71,7 @@ class InsDownload():
                                     with open(self._dir + target_name, 'wb') as file:
                                         file.write(target_result)
                                         LOGGER.info(
-                                            'File downloaded successfully at {dir}'.format(dir=self._dir + target_name))
+                                            'File downloaded successfully in {dir}'.format(dir=self._dir + target_name))
                                     return True
                                 except Exception as e:
                                     LOGGER.exception(e)
