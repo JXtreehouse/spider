@@ -25,7 +25,7 @@ class BaiduImgItem(Item):
 
 
 class BaiduImgSpider(Spider):
-    start_urls = ['https://tieba.baidu.com/p/5062084136']
+    start_urls = ['https://tieba.baidu.com/p/4429779987']
     img_path = 'data/'
     set_mul = True
     headers = {
@@ -39,21 +39,22 @@ class BaiduImgSpider(Spider):
         pages = list(set(i.get('href') for i in etree.cssselect('li.pb_list_pager>a')))
 
         pages.append(self.start_urls[0])
-        for page in pages:
+        for key, page in enumerate(pages):
             url = urljoin(self.start_urls[0], page)
-            yield Request(url, headers=self.headers, callback=self.parse_item)
+            yield Request(url, headers=self.headers, callback=self.parse_item, extra_value={'key': key})
 
     def parse_item(self, res):
         items_data = BaiduImgItem.get_item(html=res.html)
         img_urls = items_data['img_url']
         for index, url in enumerate(img_urls):
             yield Request(url, headers=self.headers, callback=self.save_img, file_type='bytes',
-                          extra_value={'index': index})
+                          extra_value={'index': index, 'key': res.extra_value['key']})
 
     def save_img(self, res):
         if not os.path.exists(self.img_path):
             os.makedirs(self.img_path)
-        img_name = str(res.extra_value['index']) + "_" + res.url[-10:].replace('/', '-')
+        extra_value = res.extra_value
+        img_name = str(extra_value['key']) + "_" + str(extra_value['index']) + "_" + res.url[-6:].replace('/', '-')
         with open(self.img_path + img_name, 'wb') as file:
             file.write(res.html)
             logging.info('Img downloaded successfully in {dir}'.format(dir=self.img_path + img_name))
