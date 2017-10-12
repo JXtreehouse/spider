@@ -2,10 +2,6 @@
 """
  Created by howie.hu at  17-10-12.
 """
-# !/usr/bin/env python
-"""
- Created by howie.hu at  17-10-11.
-"""
 import os
 import logging
 
